@@ -1,0 +1,15 @@
+{
+  "fixed": {
+    "file_version": "2.0.0"
+  },
+  "info": {
+    "0000": {
+      "ProductVersion": "2.0.0",
+      "CompanyName": "tetraquark",
+      "FileDescription": "Восстановление сети после VPN",
+      "LegalCopyright": "© 2026 tetraquark",
+      "ProductName": "NetFixer",
+      "Comments": "Быстрое восстановление сетевых настроек Windows"
+    }
+  }
+}

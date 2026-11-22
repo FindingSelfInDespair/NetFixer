@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Восстановление Сети</title>
+</head>
+<body>
+  <!-- Живая фоновая подсветка под состояние сети -->
+  <div id="ambientBg" class="ambient-bg state-idle"></div>
+
+  <div class="app-shell">
+    <!-- Верхняя панель -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+            <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+            <line x1="12" y1="20" x2="12.01" y2="20"/>
+          </svg>
+        </div>
+        <span class="brand-name">NetFixer</span>
+      </div>
+
+      <!-- Плавный переключатель Обычный / Профи -->
+      <div class="mode-switch" id="modeSwitch" data-mode="simple">
+        <div class="mode-thumb"></div>
+        <button class="mode-btn active" data-target="simple">Обычный</button>
+        <button class="mode-btn" data-target="pro">Профи</button>
+      </div>
+
+      <div class="top-actions">
+        <button id="adminPill" class="admin-pill" title="Статус прав администратора">
+          <span class="dot"></span>
+          <span id="adminPillText">Проверка...</span>
+        </button>
+
+        <button id="refreshBtn" class="icon-btn" title="Проверить сеть заново">
+          <svg class="refresh-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+        </button>
+
+        <button id="themeBtn" class="icon-btn" title="Сменить тему">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ОБЫЧНЫЙ РЕЖИМ (для всех пользователей) -->
+    <main id="simpleView" class="view-simple">
+      <div class="hero-stage">
+        <div id="heroOrb" class="hero-orb state-idle">
+          <div class="orb-ring ring-1"></div>
+          <div class="orb-ring ring-2"></div>
+          <div class="orb-core" id="heroIcon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+        </div>
+
+        <h1 id="heroTitle" class="hero-title">Проверяем интернет...</h1>
+        <p id="heroSubtitle" class="hero-subtitle">Секунду, оцениваем состояние подключения</p>
+
+        <!-- 3 понятных чипа -->
+        <div class="simple-pills">
+          <div class="s-pill" id="pillInternet">
+            <span class="s-dot"></span>
+            <span>Связь: <strong id="pillInternetVal">...</strong></span>
+          </div>
+          <div class="s-pill" id="pillDns">
+            <span class="s-dot"></span>
+            <span>Сайты: <strong id="pillDnsVal">...</strong></span>
+          </div>
+          <div class="s-pill" id="pillProxy">
+            <span class="s-dot"></span>
+            <span>Хвосты VPN: <strong id="pillProxyVal">...</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="simple-cta">
+        <div id="simpleProgressWrap" class="simple-progress hidden">
+          <div class="simple-progress-bar">
+            <div id="simpleProgressFill" class="simple-progress-fill"></div>
+          </div>
+          <span id="simpleProgressPct" class="simple-progress-pct">0%</span>
+        </div>
+
+        <button id="simpleFixBtn" class="hero-btn">
+          <span class="btn-shine"></span>
+          <span id="simpleFixText">Починить интернет</span>
+        </button>
+
+        <div class="simple-foot-links">
+          <span class="safe-hint">Безопасно сбросит сбитые настройки VPN, DNS и кэш</span>
+          <button id="openDrawerBtn" class="link-subtle">Показать подробности</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- ПРОФЕССИОНАЛЬНЫЙ РЕЖИМ -->
+    <main id="proView" class="view-pro hidden">
+      <div class="pro-sidebar">
+        <!-- Мини-диагностика 2x2 -->
+        <div class="pro-diag-grid">
+          <div class="mini-card">
+            <span class="mini-label">Адаптер</span>
+            <strong id="proAdapter" class="mini-val">—</strong>
+            <span id="proIP" class="mini-sub">—</span>
+          </div>
+          <div class="mini-card">
+            <span class="mini-label">Связь (IP)</span>
+            <strong id="proInternet" class="mini-val">—</strong>
+            <span id="proPing" class="mini-sub">—</span>
+          </div>
+          <div class="mini-card">
+            <span class="mini-label">DNS</span>
+            <strong id="proDns" class="mini-val">—</strong>
+            <span class="mini-sub">Резолв</span>
+          </div>
+          <div class="mini-card">
+            <span class="mini-label">Прокси</span>
+            <strong id="proProxy" class="mini-val">—</strong>
+            <span id="proProxySub" class="mini-sub">WinINET</span>
+          </div>
+        </div>
+
+        <!-- Настройки -->
+        <div class="pro-card">
+          <div class="pro-section-title">DNS-сервер после сброса</div>
+          <div class="dns-grid" id="dnsSelector">
+            <button class="dns-chip active" data-dns="dhcp">Авто (DHCP)</button>
+            <button class="dns-chip" data-dns="cloudflare">1.1.1.1</button>
+            <button class="dns-chip" data-dns="google">8.8.8.8</button>
+            <button class="dns-chip" data-dns="keep">Не менять</button>
+          </div>
+
+          <div class="pro-toggles">
+            <label class="toggle-row">
+              <div class="toggle-info">
+                <span class="toggle-title">Обновить IP-адрес</span>
+                <span class="toggle-desc">ipconfig /release и /renew</span>
+              </div>
+              <input type="checkbox" id="resetIpCheck" checked />
+              <span class="switch"></span>
+            </label>
+
+            <label class="toggle-row">
+              <div class="toggle-info">
+                <span class="toggle-title">Глубокий сброс</span>
+                <span class="toggle-desc">ARP, NetBIOS, IPv4/IPv6 и Брандмауэр</span>
+              </div>
+              <input type="checkbox" id="advancedCheck" />
+              <span class="switch"></span>
+            </label>
+          </div>
+        </div>
+
+        <button id="proFixBtn" class="pro-btn">
+          <span id="proFixText">Запустить восстановление</span>
+        </button>
+      </div>
+
+      <!-- Терминал -->
+      <div class="pro-terminal-card">
+        <div class="term-header">
+          <div class="term-title-wrap">
+            <span class="term-dot"></span>
+            <span id="proProgressLabel" class="term-title">Журнал операций</span>
+          </div>
+          <div class="term-actions">
+            <span id="proProgressPct" class="term-pct">0%</span>
+            <button id="copyLogBtn" class="term-btn">Копировать</button>
+            <button id="clearLogBtn" class="term-btn">Очистить</button>
+          </div>
+        </div>
+
+        <div class="term-progress-track">
+          <div id="proProgressFill" class="term-progress-fill"></div>
+        </div>
+
+        <div id="proLogBox" class="term-box"></div>
+      </div>
+    </main>
+
+    <!-- Футер -->
+    <footer class="footer">
+      <button id="authorLink" class="author-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        <span>Made by tetraquark</span>
+      </button>
+      <span id="modeFootLabel" class="foot-tag">Обычный режим • v2.0</span>
+    </footer>
+  </div>
+
+  <!-- Выдвижное окно с журналом для Обычного режима -->
+  <div id="logDrawer" class="modal-backdrop hidden">
+    <div class="drawer-card">
+      <div class="drawer-head">
+        <h3>Технический журнал</h3>
+        <div class="term-actions">
+          <button id="drawerCopyBtn" class="term-btn">Копировать</button>
+          <button id="closeDrawerBtn" class="term-btn">Закрыть</button>
+        </div>
+      </div>
+      <div id="drawerLogBox" class="term-box drawer-box"></div>
+    </div>
+  </div>
+
+  <!-- Окно предложения перезагрузки -->
+  <div id="rebootModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-icon">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+      </div>
+      <h2>Готово! Перезагрузить ПК?</h2>
+      <p id="rebootText">Чтобы Windows на 100% применила глубокие сетевые изменения, лучше перезагрузить компьютер.</p>
+      <div class="modal-actions">
+        <button id="laterBtn" class="btn-sec">Сделаю позже</button>
+        <button id="rebootNowBtn" class="btn-prim">Перезагрузить</button>
+        <button id="cancelRebootBtn" class="btn-dang hidden">Отменить перезагрузку</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
