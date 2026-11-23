@@ -14,9 +14,11 @@
 
 </div>
 
-<img width="844" height="581" alt="NetFixer_sm9wBNPY2d" src="https://github.com/user-attachments/assets/aa310f2d-c505-4a58-8864-c569f486f2d6" />
-<img width="844" height="581" alt="NetFixer_Max3dkkOKu" src="https://github.com/user-attachments/assets/cf98a257-c098-4abe-a038-5a30493a8acd" />
-
+<p align="center">
+  <img width="420" alt="NetFixer_sm9wBNPY2d" src="https://github.com/user-attachments/assets/aa310f2d-c505-4a58-8864-c569f486f2d6" />
+  &nbsp;&nbsp;&nbsp;
+  <img width="420" alt="NetFixer_Max3dkkOKu" src="https://github.com/user-attachments/assets/cf98a257-c098-4abe-a038-5a30493a8acd" />
+</p>
 
 ---
 
